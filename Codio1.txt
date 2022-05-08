@@ -1,0 +1,47 @@
+import sys
+
+s,f=sys.stdin.readline().split()
+s=int(s)
+f=int(f)
+counter = 0
+counters = [1]          #array is treated by the function as a global variable
+                        #thus easily accessible. Will always hold just one value -
+                        # -the maximum number of runs
+                        #It is also initialised for case n = 1
+  
+storedValues = {1: 1}    #initialising dictionary with case for n=1
+                        #so that the recursive TNPO function doesn't have to
+                        #check every recursive call if n==1 (as it will be already
+                        #in the dictionary. Thus function performs one less operation)
+                        #dictionary stores values of the number of runs for a given n,
+                        #thus utilising memoisation to optimise the algorithm
+
+#s and f are now integers containing the start and finish values
+
+def TNPO(n, cnt):
+  
+  if n not in storedValues:  #check if dictionary entry with key n exists
+        
+    
+    if n % 2 !=0:
+      cnt+=1
+      storedValues[int(n)] = TNPO(3*n+1, cnt) + 1
+      
+    elif n %2 == 0:
+      cnt+=1
+      storedValues[int(n)] = TNPO(n/2, cnt) + 1
+       
+    if storedValues.get(int(n)) >counters[0]:   #update longest run
+       counters.pop(0)
+       counters.append(storedValues[int(n)])
+      
+  return storedValues.get(int(n))  #if dictionary entry with key n exists, return that entry
+
+while s <= f:
+  
+  TNPO(s, counter)
+  s+=1
+  
+  
+  
+print(counters[0]) #executing in codio takes around 7 seconds, but in console just over 4
